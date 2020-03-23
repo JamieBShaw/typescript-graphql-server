@@ -1,22 +1,33 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { ObjectType, Field, ID } from 'type-graphql';
 
+// Set up both our typedefs and database schema
+
+@ObjectType() //makes this entity a object type in grapql
 @Entity()
 export class User extends BaseEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
+  @Field(() => ID)
+  @PrimaryGeneratedColumn()
+  id: number;
 
-	@Column()
-	firstName: string;
+  @Field() // field = graphql schema
+  @Column()
+  firstName: string;
 
-	@Column()
-	lastName: string;
+  @Field()
+  @Column()
+  lastName: string;
+  @Field()
+  @Column()
+  username: string;
 
-	@Column()
-	username: string;
+  @Field()
+  @Column('text', { unique: true })
+  email: string;
 
-	@Column("text", { unique: true })
-	email: string
+  @Column() // column = database column
+  password: string;
 
-	@Column()
-	password: string;
+  @Field()
+  confirmPassword: string;
 }

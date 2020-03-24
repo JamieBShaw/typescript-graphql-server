@@ -1,9 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
-import { ObjectType, Field, ID } from 'type-graphql';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, Entity, OneToOne, JoinColumn } from 'typeorm';
+import { ObjectType, Field, ID, ObjectType } from 'type-graphql';
 
 // Set up both our typedefs and database schema
 
-@ObjectType() //makes this entity a object type in grapql
+@ObjectType() // makes this entity a object type in grapql
 @Entity()
 export class User extends BaseEntity {
   @Field(() => ID)
@@ -17,6 +17,7 @@ export class User extends BaseEntity {
   @Field()
   @Column()
   lastName: string;
+
   @Field()
   @Column()
   username: string;
@@ -28,6 +29,7 @@ export class User extends BaseEntity {
   @Column() // column = database column
   password: string;
 
-  @Field()
+  @Field({ description: "To validate user input of password"})
   confirmPassword: string;
 }
+

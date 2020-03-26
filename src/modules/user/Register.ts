@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Arg, Args } from 'type-graphql';
 import bcrypt from 'bcryptjs';
 import { User } from '../../entity/User';
 import { UserInputError } from 'apollo-server-express';
+import { RegisterInput } from './register/RegisterInput';
 
 @Resolver(User)
 export class RegisterResolver {
@@ -20,12 +21,15 @@ export class RegisterResolver {
 
   @Mutation(() => User)
   async register(
-    @Arg('firstName') firstName: string,
-    @Arg('lastName') lastName: string,
-    @Arg('username') username: string,
-    @Arg('email') email: string,
-    @Arg('password') password: string,
-    @Arg('confirmPassword') confirmPassword: string
+    @Arg('input')
+    {
+      firstName,
+      lastName,
+      username,
+      email,
+      password,
+      confirmPassword,
+    }: RegisterInput
   ): Promise<User> {
     if (confirmPassword !== password) {
       throw new UserInputError('passwords do not match');

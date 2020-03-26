@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, Entity, OneToOne, JoinColumn } from 'typeorm';
-import { ObjectType, Field, ID, ObjectType } from 'type-graphql';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm';
+import { ObjectType, Field, ID, Root } from 'type-graphql';
 
 // Set up both our typedefs and database schema
 
@@ -19,6 +19,11 @@ export class User extends BaseEntity {
   lastName: string;
 
   @Field()
+  name(@Root() parent: User): string {
+    return `${parent.firstName} ${parent.lastName}`;
+  }
+
+  @Field()
   @Column()
   username: string;
 
@@ -29,7 +34,6 @@ export class User extends BaseEntity {
   @Column() // column = database column
   password: string;
 
-  @Field({ description: "To validate user input of password"})
+  @Field({ description: 'To validate user input of password' })
   confirmPassword: string;
 }
-

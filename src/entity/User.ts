@@ -31,9 +31,14 @@ export class User extends BaseEntity {
   @Column('text', { unique: true })
   email: string;
 
+  @Field()
   @Column() // column = database column
   password: string;
 
   @Field({ description: 'To validate user input of password' })
   confirmPassword: string;
+
+  @Field()
+  @Column('boolean', { default: false })
+  active: boolean;
 }

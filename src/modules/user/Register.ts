@@ -1,27 +1,16 @@
-import { Resolver, Query, Mutation, Arg, Args } from 'type-graphql';
+import { Resolver, Mutation, Arg } from 'type-graphql';
 import bcrypt from 'bcryptjs';
 import { User } from '../../entity/User';
 import { UserInputError } from 'apollo-server-express';
 import { RegisterInput } from './register/RegisterInput';
+import { sendEmail } from '../../utils/Email/sendEmail';
+import { createConfirmationUrl } from '../../utils/Email/createConfirmationUrl';
 
 @Resolver(User)
 export class RegisterResolver {
-  @Query(() => User)
-  async userFinder(@Arg('email') email: string, @Arg('id') userId: number) {
-    const user = await User.findOne({
-      email: email,
-      id: userId,
-    });
-
-    if (!user) {
-      throw new Error('User not found');
-    }
-    return user;
-  }
-
   @Mutation(() => User)
   async register(
-    @Arg('input')
+    @Arg('inputs')
     {
       firstName,
       lastName,
@@ -44,6 +33,8 @@ export class RegisterResolver {
       username,
       password: hashedPassword,
     }).save();
+
+    await sendEmail(email, await createConfirmationUrl(user.id));
 
     return user;
   }

@@ -20,12 +20,6 @@ export class LoginResolver {
       })
       .getOne();
 
-    // const user = await User.findOne({
-    //   where: {
-    //     username: username,
-    //   },
-    // });
-
     if (!user) {
       return null;
     }

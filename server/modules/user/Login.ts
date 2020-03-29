@@ -3,7 +3,6 @@ import { User } from '../../entity/User';
 import bcrypt from 'bcryptjs';
 import { LoginInput } from './login/LoginInputs';
 import { LoginContext } from '../../types/LoginContext';
-import { findByLoginDetails } from './login/utils/FindByLoginDetails';
 
 @Resolver(User)
 export class LoginResolver {

@@ -7,12 +7,7 @@ import session from 'express-session';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
 
-import { RegisterResolver } from './modules/user/Register';
-import { LoginResolver } from './modules/user/Login';
-import { UserFinderResolver } from './modules/user/UserFinder';
-import { MeResolver } from './modules/user/Me';
 import { redis } from './redis';
-import { sendEmail } from './utils/Email/sendEmail';
 
 const main = async () => {
   try {
@@ -23,17 +18,12 @@ const main = async () => {
   }
 
   const schema = await buildSchema({
-    resolvers: [
-      RegisterResolver,
-      UserFinderResolver,
-      LoginResolver,
-      MeResolver,
-    ],
+    resolvers: [__dirname + '/modules/**/*.ts'],
   });
 
   const apolloServer = new ApolloServer({
     schema,
-    context: ({ req }: any) => ({ req }),
+    context: ({ req, res }: any) => ({ req, res }),
   });
 
   const app = express();
@@ -64,7 +54,7 @@ const main = async () => {
     })
   );
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
 
   app.listen(4000, () => {
     console.log('SERVER STATRED ON PORT http://localhost:4000/graphql');

@@ -5,9 +5,9 @@ import { LoginContext } from '../../types/LoginContext';
 import { isAuth } from '../../utils/middleware/isAuth';
 
 @Resolver(User)
-export class MeResolver {
+export class whoAmIResolver {
   @Query(() => User, { nullable: true })
-  async me(@Ctx() ctx: LoginContext): Promise<User | undefined> {
+  async whoAmI(@Ctx() ctx: LoginContext): Promise<User | undefined> {
     const id = ctx.req.session!.userId;
 
     if (!id) {

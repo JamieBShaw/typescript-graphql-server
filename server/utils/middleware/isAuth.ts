@@ -1,5 +1,5 @@
 import { MiddlewareFn } from 'type-graphql';
-import { LoginContext } from 'src/types/LoginContext';
+import { LoginContext } from 'server/types/LoginContext';
 
 export const isAuth: MiddlewareFn<LoginContext> = async ({ context }, next) => {
   if (!context.req.session!.userId) {

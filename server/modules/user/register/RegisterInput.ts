@@ -1,5 +1,5 @@
 import { InputType, Field } from 'type-graphql';
-import { Length, IsEmail } from 'class-validator';
+import { Length, IsEmail, Min } from 'class-validator';
 
 import { IsUsernameOrEmailAlreadyExist } from './utils/validation/isUsernameOrEmailAlreadyExist';
 
@@ -24,10 +24,10 @@ export class RegisterInput {
   email: string;
 
   @Field()
-  @Length(8, 30, { message: 'Password must 8 characters or more' })
+  @Min(8, { message: 'Password must 8 characters or more' })
   password: string;
 
   @Field()
-  @Length(8, 30, { message: 'Password must be 8 characters or more' })
+  @Min(8, { message: 'Password must be 8 characters or more' })
   confirmPassword: string;
 }

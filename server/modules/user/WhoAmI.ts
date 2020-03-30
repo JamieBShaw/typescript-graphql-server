@@ -6,20 +6,22 @@ import { isAuth } from '../../utils/middleware/isAuth';
 
 @Resolver(User)
 export class whoAmIResolver {
-  @Query(() => User, { nullable: true })
-  async whoAmI(@Ctx() ctx: LoginContext): Promise<User | undefined> {
-    const id = ctx.req.session!.userId;
+    @Query(() => User, { nullable: true })
+    async whoAmI(
+        @Ctx() ctx: LoginContext
+    ): Promise<User | undefined> {
+        const id = ctx.req.session!.userId;
 
-    if (!id) {
-      return undefined;
+        if (!id) {
+            return undefined;
+        }
+
+        return await User.findOne(id);
     }
 
-    return await User.findOne(id);
-  }
-
-  @UseMiddleware(isAuth)
-  @Query(() => String)
-  async hello() {
-    return 'hello';
-  }
+    @UseMiddleware(isAuth)
+    @Query(() => String)
+    async hello() {
+        return 'hello';
+    }
 }

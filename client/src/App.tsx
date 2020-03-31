@@ -5,12 +5,15 @@ import './App.css';
 
 import Login from './routes/Login';
 import Register from './routes/Register';
+import Container from 'react-bootstrap/Container';
 
 const App: React.FC = () => {
     return (
         <Router>
-            <Route exact path="/" component={Login} />
-            <Route exact path="/register" component={Register} />
+            <Container fluid="lg">
+                <Route exact path="/" component={Login} />
+                <Route exact path="/register" component={Register} />
+            </Container>
         </Router>
     );
 };

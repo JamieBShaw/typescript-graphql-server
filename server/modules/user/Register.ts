@@ -1,7 +1,7 @@
 import { Resolver, Mutation, Arg } from 'type-graphql';
 import bcrypt from 'bcryptjs';
 import { User } from '../../entity/User';
-import { UserInputError } from 'apollo-server-express';
+import { UserInputError, ValidationError } from 'apollo-server-express';
 import { RegisterInput } from './register/RegisterInput';
 import { sendEmail } from '../../utils/Email/sendEmail';
 import { createConfirmationUrl } from '../../utils/Email/createConfirmationUrl';
@@ -20,6 +20,19 @@ export class RegisterResolver {
             confirmPassword,
         }: RegisterInput
     ): Promise<User> {
+        const userWithEmailOrUsernameAlreadyExist = await User.createQueryBuilder(
+            'user'
+        )
+            .where('user.email = :email OR user.username = :username', {
+                email: email,
+                username: username,
+            })
+            .getOne();
+
+        if (userWithEmailOrUsernameAlreadyExist) {
+            throw new ValidationError('User already exists');
+        }
+
         if (confirmPassword !== password) {
             throw new UserInputError('passwords do not match');
         }

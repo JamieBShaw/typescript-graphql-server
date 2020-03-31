@@ -1,7 +1,5 @@
 import { InputType, Field } from 'type-graphql';
-import { Length, IsEmail, Min } from 'class-validator';
-
-import { IsUsernameOrEmailAlreadyExist } from './utils/validation/isUsernameOrEmailAlreadyExist';
+import { Length, IsEmail } from 'class-validator';
 
 @InputType()
 export class RegisterInput {
@@ -15,23 +13,17 @@ export class RegisterInput {
 
     @Field()
     @Length(1, 30, { message: 'Please provider a username' })
-    @IsUsernameOrEmailAlreadyExist({
-        message: 'Username already in use',
-    })
     username: string;
 
     @Field()
     @IsEmail()
-    @IsUsernameOrEmailAlreadyExist({
-        message: 'Email already in use',
-    })
     email: string;
 
     @Field()
-    @Min(8, { message: 'Password must 8 characters or more' })
+    @Length(8, 30, { message: 'Password must 8 characters or more' })
     password: string;
 
     @Field()
-    @Min(8, { message: 'Password must be 8 characters or more' })
+    @Length(8, 30, { message: 'Password must 8 characters or more' })
     confirmPassword: string;
 }

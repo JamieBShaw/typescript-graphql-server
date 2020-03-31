@@ -1,55 +1,89 @@
-import React from 'react';
+import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import { useForm } from 'react-hook-form';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
-interface formData {
+interface StateProps {
     username: string;
     password: string;
 }
 
+const initialState = {
+    username: '',
+    password: '',
+};
+
 const Login: React.FC = () => {
     const [errors, setErrors] = useState({});
+    const [values, setValues] = useState<StateProps>(initialState);
 
-    const { register, handleSubmit } = useForm<formData>();
-
-    const [LoginUser] = useMutation(LOGIN_USER, {
+    const [LoginUser, { loading }] = useMutation(LOGIN_USER, {
         update(_, { data }) {
             console.log(data);
         },
         onError(err) {
             console.log(err.graphQLErrors[0]);
-            setErrors(
-                err.graphQLErrors[0].extensions!.exception.errors
-            );
+            console.log(errors);
+            setErrors(err.graphQLErrors);
         },
     });
 
-    const onSubmit = handleSubmit(({ username, password }) => {
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setValues({
+            ...values,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         console.log('SUBMITTING');
         LoginUser({
             variables: {
-                username: username,
-                password: password,
+                username: values.username,
+                password: values.password,
             },
         });
-    });
+    };
 
     return (
-        <div className="App">
-            <form onSubmit={onSubmit}>
-                <input
-                    name="username"
-                    type="text"
-                    ref={register}
-                ></input>
-                <input
-                    name="password"
-                    type="password"
-                    ref={register}
-                ></input>
-                <button type="submit">Login</button>
-            </form>
+        <div className="App ">
+            <Form onSubmit={onSubmit} noValidate>
+                <Form.Row>
+                    <Col>
+                        <Form.Label>Email address or username </Form.Label>
+                        <Form.Control
+                            name="username"
+                            value={values.username}
+                            onChange={onChange}
+                            type="text"
+                            placeholder="Email or Username"
+                        ></Form.Control>
+                    </Col>
+                </Form.Row>
+                <Form.Row>
+                    <Col>
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            required
+                            name="password"
+                            value={values.password}
+                            onChange={onChange}
+                            type="password"
+                            placeholder="Password"
+                        ></Form.Control>
+                        <Form.Control.Feedback type="invalid">
+                            "Your Email/Username or Password is incorrect"
+                        </Form.Control.Feedback>
+                    </Col>
+                </Form.Row>
+
+                <Button style={{ marginTop: '10px' }} size="sm" type="submit">
+                    {loading ? 'Loading' : 'Login'}
+                </Button>
+            </Form>
         </div>
     );
 };

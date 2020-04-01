@@ -57,9 +57,7 @@ const main = async () => {
     apolloServer.applyMiddleware({ app, cors: false });
 
     app.listen(4000, () => {
-        console.log(
-            'SERVER STATRED ON PORT http://localhost:4000/graphql'
-        );
+        console.log('SERVER STATRED ON PORT http://localhost:4000/graphql');
     });
 };
 

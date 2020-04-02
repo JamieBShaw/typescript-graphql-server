@@ -2,9 +2,17 @@ import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 
-import { TextField, Button } from '@material-ui/core/';
+import { TextField, Button, Grid, Paper } from '@material-ui/core/';
 import useStyles from './Styles';
 
+interface StateProps {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    username?: string;
+    password?: string;
+    confirmPassword?: string;
+}
 const initialState = {
     firstName: '',
     lastName: '',
@@ -17,7 +25,9 @@ const initialState = {
 const Register: React.FC = () => {
     const classes = useStyles();
 
-    const [values, setValues] = useState(initialState);
+    //   const [errors, setErrors] = useState<StateProps | null>();
+
+    const [values, setValues] = useState<StateProps>(initialState);
 
     const [registerUser] = useMutation(REGISTER_USER, {
         update(_, { data }) {
@@ -25,7 +35,10 @@ const Register: React.FC = () => {
         },
         onError(err) {
             console.log(err.message);
-            console.log(err.graphQLErrors);
+
+            console.log(
+                err.graphQLErrors[0].extensions!.exception.validationErrors
+            );
         },
     });
 
@@ -47,44 +60,69 @@ const Register: React.FC = () => {
     };
 
     return (
-        <form className={classes.formContainer} onSubmit={onSubmit}>
-            <TextField
-                className={classes.title}
-                name="firstName"
-                value={values?.firstName}
-                type="text"
-                onChange={onChange}
-            ></TextField>
-            <TextField
-                name="lastName"
-                value={values?.lastName}
-                type="text"
-                onChange={onChange}
-            ></TextField>
-            <TextField>
-                name="username" value={values?.username}
-                type="text" onChange={onChange}
-            </TextField>
-            <TextField
-                name="email"
-                value={values?.email}
-                type="email"
-                onChange={onChange}
-            ></TextField>
-            <TextField
-                name="password"
-                value={values?.password}
-                type="password"
-                onChange={onChange}
-            ></TextField>
-            <TextField
-                name="confirmPassword"
-                value={values?.confirmPassword}
-                type="password"
-                onChange={onChange}
-            ></TextField>
-            <Button type="submit">Login</Button>
-        </form>
+        <Grid justify="center" container>
+            <Paper className={classes.control}>
+                <form onSubmit={onSubmit}>
+                    <TextField
+                        label="First Name"
+                        name="firstName"
+                        value={values?.firstName}
+                        type="text"
+                        onChange={onChange}
+                    ></TextField>
+                    <TextField
+                        label="Last Name"
+                        name="lastName"
+                        value={values?.lastName}
+                        type="text"
+                        onChange={onChange}
+                    ></TextField>
+                    <TextField
+                        label="Username"
+                        name="username"
+                        value={values?.username}
+                        type="text"
+                        onChange={onChange}
+                    ></TextField>
+                    <TextField
+                        label="Email address"
+                        name="email"
+                        value={values?.email}
+                        type="email"
+                        onChange={onChange}
+                    ></TextField>
+                    <TextField
+                        label="Password"
+                        name="password"
+                        value={values?.password}
+                        type="password"
+                        onChange={onChange}
+                    ></TextField>
+                    <TextField
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        value={values?.confirmPassword}
+                        type="password"
+                        onChange={onChange}
+                    ></TextField>
+                    <Button
+                        size="small"
+                        variant="contained"
+                        style={{
+                            marginTop: '25px',
+                            blockSize: '40px',
+                            marginLeft: '75px',
+                            width: '200px',
+                            display: 'flex',
+                        }}
+                        type="submit"
+                        color="primary"
+                    >
+                        Register
+                    </Button>
+                </form>
+            </Paper>
+        </Grid>
     );
 };
 

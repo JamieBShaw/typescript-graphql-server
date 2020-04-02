@@ -2,7 +2,7 @@
     "name": "typsescript-graphql-server",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "server/index.ts",
     "scripts": {
         "start": "ts-node-dev --no-notify --respawn server/index.ts",
         "build": "tsc"

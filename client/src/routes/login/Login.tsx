@@ -16,7 +16,7 @@ const initialState = {
 
 const Login: React.FC = () => {
     const classes = useStyles();
-    const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<string | null>(null);
     const [values, setValues] = useState<StateProps>(initialState);
 
     const [LoginUser, { loading }] = useMutation(LOGIN_USER, {
@@ -24,10 +24,7 @@ const Login: React.FC = () => {
             console.log(data);
         },
         onError(err) {
-            console.log(err.graphQLErrors);
-            console.log(errors);
-
-            setErrors(err.graphQLErrors);
+            setErrors(err.graphQLErrors[0].message);
         },
     });
 
@@ -50,18 +47,13 @@ const Login: React.FC = () => {
     };
 
     return (
-        <Grid justify="center" alignItems="center" container spacing={2}>
+        <Grid justify="center" container spacing={2}>
             <Paper
                 variant="elevation"
                 className={classes.control}
                 elevation={3}
             >
-                <form
-                    className={classes.formContainer}
-                    onSubmit={onSubmit}
-                    noValidate
-                    autoComplete="off"
-                >
+                <form onSubmit={onSubmit} noValidate autoComplete="off">
                     <TextField
                         id="standard-basic"
                         label="First Name"
@@ -69,16 +61,19 @@ const Login: React.FC = () => {
                         value={values.username}
                         onChange={onChange}
                         type="text"
+                        error={!!errors}
+                        helperText={errors}
                     ></TextField>
 
                     <TextField
                         id="standard-basic"
-                        style={{ marginLeft: '10px' }}
                         label="Password"
                         name="password"
                         value={values.password}
                         onChange={onChange}
                         type="password"
+                        error={!!errors}
+                        helperText={errors}
                     ></TextField>
 
                     <Button
@@ -87,7 +82,9 @@ const Login: React.FC = () => {
                         style={{
                             marginTop: '25px',
                             blockSize: '40px',
-                            marginLeft: '10px',
+                            marginLeft: '75px',
+                            width: '200px',
+                            display: 'flex',
                         }}
                         type="submit"
                         color="primary"

@@ -14,18 +14,15 @@ export class LoginResolver {
         @Ctx() ctx: LoginContext
     ): Promise<User | null> {
         const user = await User.createQueryBuilder('user')
-            .where(
-                'user.email = :email OR user.username = :username',
-                {
-                    email: email,
-                    username: username,
-                }
-            )
+            .where('user.email = :email OR user.username = :username', {
+                email: email,
+                username: username,
+            })
             .getOne();
 
         if (!user) {
             console.log('USER NOT FOUND');
-            throw new UserInputError('Wrong credentials');
+            throw new UserInputError('Your username or password was incorrect');
         }
 
         const valid = await bcrypt.compare(password, user.password);

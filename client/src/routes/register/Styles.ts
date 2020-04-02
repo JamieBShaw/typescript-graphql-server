@@ -1,23 +1,17 @@
-import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
-export default makeStyles(() =>
+export default makeStyles((theme: Theme) =>
     createStyles({
-        root: {
-            height: '10px',
-        },
-        formContainer: {
-            margin: '1rem',
-            '& .MuiTextField-root': {
-                margin: '1rem 0',
-            },
-        },
-
-        title: {
-            flexGrow: 1,
-        },
-
-        text: {
+        control: {
+            marginTop: '25px',
+            paddingTop: '40px',
+            padding: theme.spacing(4),
+            display: 'flex',
+            flexDirection: 'column',
             textAlign: 'center',
+            height: 350,
+            width: 350,
+            zIndex: 2,
         },
     })
 );

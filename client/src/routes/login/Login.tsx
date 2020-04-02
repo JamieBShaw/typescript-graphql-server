@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import { TextField, Button, Container, FormGroup } from '@material-ui/core';
+import { TextField, Button, Grid, Paper } from '@material-ui/core';
 import useStyles from './Styles';
 
 interface StateProps {
@@ -26,6 +26,7 @@ const Login: React.FC = () => {
         onError(err) {
             console.log(err.graphQLErrors);
             console.log(errors);
+
             setErrors(err.graphQLErrors);
         },
     });
@@ -49,29 +50,30 @@ const Login: React.FC = () => {
     };
 
     return (
-        <Container fixed maxWidth="md">
-            <FormGroup row>
+        <Grid justify="center" alignItems="center" container spacing={2}>
+            <Paper
+                variant="elevation"
+                className={classes.control}
+                elevation={3}
+            >
                 <form
                     className={classes.formContainer}
                     onSubmit={onSubmit}
                     noValidate
-                    autoComplete="offa"
+                    autoComplete="off"
                 >
                     <TextField
                         id="standard-basic"
                         label="First Name"
-                        className={classes.title}
                         name="username"
                         value={values.username}
                         onChange={onChange}
                         type="text"
-                        required
                     ></TextField>
 
                     <TextField
                         id="standard-basic"
                         style={{ marginLeft: '10px' }}
-                        required
                         label="Password"
                         name="password"
                         value={values.password}
@@ -93,8 +95,8 @@ const Login: React.FC = () => {
                         {loading ? 'Loading' : 'Login'}
                     </Button>
                 </form>
-            </FormGroup>
-        </Container>
+            </Paper>
+        </Grid>
     );
 };
 

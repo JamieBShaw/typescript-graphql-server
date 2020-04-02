@@ -7,7 +7,7 @@ export default makeStyles((theme: Theme) =>
         },
         formContainer: {
             paddingTop: '50px',
-            marginTop: '10px',
+            marginTop: '50px',
             margin: '1rem',
             '& .MuiTextField-root': {
                 margin: '1rem 0',
@@ -18,8 +18,12 @@ export default makeStyles((theme: Theme) =>
             display: 'flex',
         },
 
-        title: {
-            flexGrow: 1,
+        control: {
+            marginTop: '50px',
+            paddingTop: '50px',
+            padding: theme.spacing(2),
+            height: 400,
+            width: 350,
         },
     })
 );

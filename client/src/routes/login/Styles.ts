@@ -11,11 +11,13 @@ export default makeStyles((theme: Theme) =>
             paddingTop: '50px',
             padding: theme.spacing(2),
             display: 'flex',
-
             textAlign: 'center',
             height: 200,
             width: 350,
             zIndex: 2,
+        },
+        inputs: {
+            marginBottom: '15px',
         },
     })
 );

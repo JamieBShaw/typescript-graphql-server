@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 
 import { TextField, Button, Grid, Paper } from '@material-ui/core/';
 import useStyles from './Styles';
+import { Formik, Form, Field } from 'formik';
 
-interface StateProps {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    username?: string;
-    password?: string;
-    confirmPassword?: string;
+interface FormValues {
+    firstName: string;
+    lastName: string;
+    email: string;
+    username: string;
+    password: string;
+    confirmPassword: string;
 }
+
 const initialState = {
     firstName: '',
     lastName: '',
@@ -22,105 +24,86 @@ const initialState = {
     confirmPassword: '',
 };
 
-const Register: React.FC = () => {
+const Register: React.FC<{}> = () => {
     const classes = useStyles();
 
-    //   const [errors, setErrors] = useState<StateProps | null>();
-
-    const [values, setValues] = useState<StateProps>(initialState);
+    const initialValues: FormValues = { ...initialState };
 
     const [registerUser] = useMutation(REGISTER_USER, {
         update(_, { data }) {
             console.log(data);
         },
-        onError(err) {
-            console.log(err.message);
-
-            console.log(
-                err.graphQLErrors[0].extensions!.exception.validationErrors
-            );
-        },
     });
-
-    const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValues({
-            ...values,
-            [event.target.name]: event.target.value,
-        });
-    };
-
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        registerUser({
-            variables: {
-                ...values,
-            },
-        });
-    };
 
     return (
         <Grid justify="center" container>
             <Paper className={classes.control}>
-                <form onSubmit={onSubmit}>
-                    <TextField
-                        label="First Name"
-                        name="firstName"
-                        value={values?.firstName}
-                        type="text"
-                        onChange={onChange}
-                    ></TextField>
-                    <TextField
-                        label="Last Name"
-                        name="lastName"
-                        value={values?.lastName}
-                        type="text"
-                        onChange={onChange}
-                    ></TextField>
-                    <TextField
-                        label="Username"
-                        name="username"
-                        value={values?.username}
-                        type="text"
-                        onChange={onChange}
-                    ></TextField>
-                    <TextField
-                        label="Email address"
-                        name="email"
-                        value={values?.email}
-                        type="email"
-                        onChange={onChange}
-                    ></TextField>
-                    <TextField
-                        label="Password"
-                        name="password"
-                        value={values?.password}
-                        type="password"
-                        onChange={onChange}
-                    ></TextField>
-                    <TextField
-                        label="Confirm Password"
-                        name="confirmPassword"
-                        value={values?.confirmPassword}
-                        type="password"
-                        onChange={onChange}
-                    ></TextField>
-                    <Button
-                        size="small"
-                        variant="contained"
-                        style={{
-                            marginTop: '25px',
-                            blockSize: '40px',
-                            marginLeft: '75px',
-                            width: '200px',
-                            display: 'flex',
-                        }}
-                        type="submit"
-                        color="primary"
-                    >
-                        Register
-                    </Button>
-                </form>
+                <Formik
+                    initialValues={initialValues}
+                    onSubmit={(values) => {
+                        registerUser({
+                            variables: {
+                                ...values,
+                            },
+                        });
+                    }}
+                >
+                    {() => (
+                        <Form>
+                            <Field
+                                label="First Name"
+                                name="firstName"
+                                type="text"
+                                as={TextField}
+                            ></Field>
+                            <Field
+                                label="Last Name"
+                                name="lastName"
+                                type="text"
+                                as={TextField}
+                            ></Field>
+                            <Field
+                                label="Username"
+                                name="username"
+                                type="text"
+                                as={TextField}
+                            ></Field>
+                            <Field
+                                label="Email address"
+                                name="email"
+                                type="email"
+                                as={TextField}
+                            ></Field>
+                            <Field
+                                label="Password"
+                                name="password"
+                                type="password"
+                                as={TextField}
+                            ></Field>
+                            <Field
+                                label="Confirm Password"
+                                name="confirmPassword"
+                                type="password"
+                                as={TextField}
+                            ></Field>
+                            <Button
+                                size="small"
+                                variant="contained"
+                                style={{
+                                    marginTop: '25px',
+                                    blockSize: '40px',
+                                    marginLeft: '75px',
+                                    width: '200px',
+                                    display: 'flex',
+                                }}
+                                type="submit"
+                                color="primary"
+                            >
+                                Register
+                            </Button>
+                        </Form>
+                    )}
+                </Formik>
             </Paper>
         </Grid>
     );

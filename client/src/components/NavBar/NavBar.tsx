@@ -26,14 +26,16 @@ export default function NavBar() {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        News
+                        App
                     </Typography>
                     <Button component={Link} to="/">
                         Home
                     </Button>
-                    <Button color="inherit" component={Link} to="/login">
-                        Login
-                    </Button>
+                    <Button
+                        color="inherit"
+                        component={Link}
+                        to="/login"
+                    ></Button>
                 </Toolbar>
             </AppBar>
         </div>

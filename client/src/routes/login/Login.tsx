@@ -2,24 +2,31 @@ import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import { TextField, Button, Grid, Paper } from '@material-ui/core';
+import { useFormik } from 'formik';
 import useStyles from './Styles';
-
-interface StateProps {
-    username: string;
-    password: string;
-}
-
-const initialState = {
-    username: '',
-    password: '',
-};
 
 const Login: React.FC = () => {
     const classes = useStyles();
-    const [errors, setErrors] = useState<string | null>(null);
-    const [values, setValues] = useState<StateProps>(initialState);
 
-    const [LoginUser, { loading }] = useMutation(LOGIN_USER, {
+    const [errors, setErrors] = useState<string | null>(null);
+
+    const formik = useFormik({
+        initialValues: {
+            username: '',
+            password: '',
+        },
+
+        onSubmit: (values) => {
+            LoginUser({
+                variables: {
+                    username: values.username,
+                    password: values.password,
+                },
+            });
+        },
+    });
+
+    const [LoginUser] = useMutation(LOGIN_USER, {
         update(_, { data }) {
             console.log(data);
         },
@@ -28,24 +35,6 @@ const Login: React.FC = () => {
         },
     });
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setValues({
-            ...values,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log('SUBMITTING');
-        LoginUser({
-            variables: {
-                username: values.username,
-                password: values.password,
-            },
-        });
-    };
-
     return (
         <Grid justify="center" container spacing={2}>
             <Paper
@@ -53,29 +42,33 @@ const Login: React.FC = () => {
                 className={classes.control}
                 elevation={3}
             >
-                <form onSubmit={onSubmit} noValidate autoComplete="off">
+                <form
+                    onSubmit={formik.handleSubmit}
+                    noValidate
+                    autoComplete="off"
+                >
                     <TextField
-                        id="standard-basic"
-                        label="First Name"
+                        className={classes.inputs}
+                        id="username"
                         name="username"
-                        value={values.username}
-                        onChange={onChange}
                         type="text"
+                        label="Username or Email"
+                        onChange={formik.handleChange}
+                        value={formik.values.username}
                         error={!!errors}
                         helperText={errors}
-                    ></TextField>
-
+                    />
                     <TextField
-                        id="standard-basic"
-                        label="Password"
+                        className={classes.inputs}
+                        id="password"
                         name="password"
-                        value={values.password}
-                        onChange={onChange}
                         type="password"
+                        label="Password"
+                        onChange={formik.handleChange}
+                        value={formik.values.password}
                         error={!!errors}
                         helperText={errors}
-                    ></TextField>
-
+                    />
                     <Button
                         size="small"
                         variant="contained"
@@ -89,7 +82,7 @@ const Login: React.FC = () => {
                         type="submit"
                         color="primary"
                     >
-                        {loading ? 'Loading' : 'Login'}
+                        Login
                     </Button>
                 </form>
             </Paper>
